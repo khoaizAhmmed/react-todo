@@ -3,13 +3,17 @@ import { FormEvent, useEffect, useState } from 'react'
 import TodoWrapper from './TodoWrapper'
 import { TodoType } from './Todos'
 
-
+function localTodoValue() {
+  const localTodo = localStorage.getItem('#todo')
+  if (localTodo) {
+    return JSON.parse(localTodo)
+  }
+  return []
+}
 
 export default function App() {
   const [newItem, setNewItem] = useState('')
-  const [todos, setTodos] = useState<TodoType[]>(JSON.parse(localStorage.getItem('#todo') ?? '') || [])
-
-  console.log(todos)
+  const [todos, setTodos] = useState<TodoType[]>(localTodoValue())
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -23,13 +27,10 @@ export default function App() {
   const toggleTodoCompleted = (id: string) => {
     const updatedTodos = todos.map((todo) => {
       if (todo.id === id) {
-        console.log(todo.checked)
-        console.log(!todo.checked)
         return { ...todo, checked: !todo.checked }
       }
       return todo
     })
-    console.log({ updatedTodos })
     setTodos(updatedTodos)
   }
 
@@ -99,5 +100,3 @@ export default function App() {
     </Flex>
   )
 }
-
-
